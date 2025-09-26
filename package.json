@@ -1,8 +1,19 @@
 {
   "name": "revion-budgeting-app",
-  "module": "index.ts",
+  "module": "./src/index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json && bun build ./src/index.ts --outdir ./dist",
+    "dev": "bun run ./src/index.ts",
+    "test": "bun test ./tests",
+    "test:coverage": "bun test ./tests --coverage",
+    "lint": "biome check --write .",
+    "lint:check": "biome check ."
+  },
+  "dependencies": {
+    "revion": "link:revion"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
