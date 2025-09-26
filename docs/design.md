@@ -184,29 +184,19 @@ This document provides a detailed design for the Household Accounting App using 
 
 ### Decider
 
-| command        | state   | event           |
-| -------------- | ------- | --------------- |
-| AddCategory    | Created | CategoryAdded   |
-| AddCategory    | Edited  | CategoryAdded   |
-| AddCategory    | Deleted | CategoryAdded   |
-| EditCategory   | Created | CategoryEdited  |
-| EditCategory   | Edited  | CategoryEdited  |
-| EditCategory   | Deleted | None / Error    |
-| DeleteCategory | Created | CategoryDeleted |
-| DeleteCategory | Edited  | CategoryDeleted |
-| DeleteCategory | Deleted | None / Error    |
+| command        | state  | event           |
+| -------------- | ------ | --------------- |
+| AddCategory    |        | CategoryAdded   |
+| EditCategory   | Active | CategoryEdited  |
+| DeleteCategory | Active | CategoryDeleted |
 
 ### Reducer
 
-| event           | state   | newState |
-| --------------- | ------- | -------- |
-| CategoryAdded   | Created | Created  |
-| CategoryAdded   | Edited  | Created  |
-| CategoryAdded   | Deleted | Created  |
-| CategoryEdited  | Created | Edited   |
-| CategoryEdited  | Edited  | Edited   |
-| CategoryDeleted | Created | Deleted  |
-| CategoryDeleted | Edited  | Deleted  |
+| event           | state  | newState |
+| --------------- | ------ | -------- |
+| CategoryAdded   |        | Created  |
+| CategoryEdited  | Active | Edited   |
+| CategoryDeleted | Active | Deleted  |
 
 ### Policy
 
