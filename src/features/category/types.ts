@@ -1,4 +1,5 @@
-import type { AggregateId, EventDeciderMap, ReducerMap } from 'revion'
+import type { AggregateId, EventDeciderMap, ProjectionMap, ReducerMap } from 'revion'
+import type { CategoryReadModel } from '../../shared/read-models/category-read-model'
 
 export type CategoryId = AggregateId<'category'>
 
@@ -51,3 +52,11 @@ export const reducerMap = {
 } satisfies ReducerMap<CategoryState, CategoryEvent>
 
 export type CategoryReducerMap = typeof reducerMap
+
+export const projectionMap = {
+  categoryAdded: [{ readModel: 'category' }],
+  categoryEdited: [{ readModel: 'category' }],
+  categoryDeleted: [{ readModel: 'category' }]
+} satisfies ProjectionMap<CategoryEvent, CategoryReadModel>
+
+export type CategoryProjectionMap = typeof projectionMap
