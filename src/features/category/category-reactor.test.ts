@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
-import { zeroId, reactorFixture } from 'revion'
-import { categoryReactor } from './category-reactor'
+import { reactorFixture, zeroId } from 'revion'
 import type { CategoryReadModel } from '../../shared/read-models/category-read-model'
+import { categoryReactor } from './category-reactor'
 
 describe('[features] category reactor', () => {
   const categoryId = zeroId('category')
