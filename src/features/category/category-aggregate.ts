@@ -14,14 +14,14 @@ const decider: EventDecider<CategoryState, CategoryCommand, CategoryEvent, Categ
     return {
       type: 'categoryAdded',
       id: command.id,
-      payload: { name: command.name }
+      payload: command.payload
     }
   },
   editCategory: ({ command }) => {
     return {
       type: 'categoryEdited',
       id: command.id,
-      payload: { name: command.name }
+      payload: command.payload
     }
   },
   deleteCategory: ({ command }) => {

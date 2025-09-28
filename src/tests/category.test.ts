@@ -18,8 +18,8 @@ describe('[integration] category api', () => {
     // Arrange
     const categoryId = zeroId('category')
     const commands: CategoryCommand[] = [
-      { type: 'addCategory', id: categoryId, name: 'category1' },
-      { type: 'editCategory', id: categoryId, name: 'category2' }
+      { type: 'addCategory', id: categoryId, payload: { name: 'category1' } },
+      { type: 'editCategory', id: categoryId, payload: { name: 'category2' } }
     ]
 
     // Act

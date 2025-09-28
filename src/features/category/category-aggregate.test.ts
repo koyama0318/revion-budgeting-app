@@ -12,7 +12,9 @@ describe('[features] category aggregate', () => {
         .when({
           type: 'addCategory',
           id: categoryId,
-          name: 'category1'
+          payload: {
+            name: 'category1'
+          }
         })
         .then(fixture => {
           fixture.assert(ctx => {
@@ -48,7 +50,9 @@ describe('[features] category aggregate', () => {
         .when({
           type: 'editCategory',
           id: categoryId,
-          name: 'category2'
+          payload: {
+            name: 'category2'
+          }
         })
         .then(fixture => {
           fixture.assert(ctx => {

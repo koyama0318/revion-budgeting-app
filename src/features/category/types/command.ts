@@ -14,9 +14,11 @@ export type CategoryCommand =
   | {
       type: 'addCategory'
       id: CategoryId
-      name: string
+      payload: {
+        name: string
+      }
     }
-  | { type: 'editCategory'; id: CategoryId; name?: string }
+  | { type: 'editCategory'; id: CategoryId; payload: { name?: string } }
   | { type: 'deleteCategory'; id: CategoryId }
 
 export type CategoryEvent =
