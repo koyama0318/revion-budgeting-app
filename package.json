@@ -11,9 +11,7 @@
     "lint": "biome check --write .",
     "lint:check": "biome check ."
   },
-  "dependencies": {
-    "revion": "link:revion"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/bun": "latest",
     "@biomejs/biome": "^2.2.4"

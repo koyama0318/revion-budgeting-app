@@ -1,13 +1,14 @@
 import { describe, expect, test } from 'bun:test'
 import { aggregateFixture, zeroId } from 'revion'
 import { category } from './category-aggregate'
+import type { CategoryCommand, CategoryEvent, CategoryState } from './types'
 
 describe('[features] category aggregate', () => {
   const categoryId = zeroId('category')
 
   describe('add category command', () => {
     test('handles add command and creates category', () => {
-      aggregateFixture(category)
+      aggregateFixture<CategoryState, CategoryCommand, CategoryEvent>(category)
         .when({
           type: 'addCategory',
           id: categoryId,
@@ -36,7 +37,7 @@ describe('[features] category aggregate', () => {
 
   describe('edit category command', () => {
     test('handles edit command and edit category', () => {
-      aggregateFixture(category)
+      aggregateFixture<CategoryState, CategoryCommand, CategoryEvent>(category)
         .given({
           type: 'categoryAdded',
           id: categoryId,
@@ -72,7 +73,7 @@ describe('[features] category aggregate', () => {
 
   describe('delete category command', () => {
     test('handles delete command and delete category', () => {
-      aggregateFixture(category)
+      aggregateFixture<CategoryState, CategoryCommand, CategoryEvent>(category)
         .given({
           type: 'categoryAdded',
           id: categoryId,
