@@ -1,4 +1,4 @@
-import type { CategoryReadModel } from '../../../shared/read-models/category-read-model'
+import type { CategoryReadModel } from '../../../shared/read-models'
 
 export type CategoryQuery =
   | {

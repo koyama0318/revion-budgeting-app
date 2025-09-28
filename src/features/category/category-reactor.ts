@@ -1,6 +1,6 @@
 import type { Policy, Projection } from 'revion'
 import { createEventReactor } from 'revion'
-import type { CategoryReadModel } from '../../shared/read-models/category-read-model'
+import type { CategoryReadModel } from '../../shared/read-models'
 import type { CategoryCommand, CategoryEvent, CategoryProjectionMap } from './types'
 import { projectionMap } from './types'
 

@@ -1,4 +1,5 @@
-import type { EventDeciderMap, ReducerMap } from 'revion'
+import type { EventDeciderMap, ProjectionMap, ReducerMap } from 'revion'
+import type { IncomeReadModel } from '../../../shared/read-models'
 import type { IncomeCommand, IncomeEvent, IncomeState } from './command'
 
 export const deciderMap = {
@@ -16,3 +17,11 @@ export const reducerMap = {
 } satisfies ReducerMap<IncomeState, IncomeEvent>
 
 export type IncomeReducerMap = typeof reducerMap
+
+export const projectionMap = {
+  incomeAdded: [{ readModel: 'income' }],
+  incomeEdited: [{ readModel: 'income' }],
+  incomeDeleted: [{ readModel: 'income' }]
+} satisfies ProjectionMap<IncomeEvent, IncomeReadModel>
+
+export type IncomeProjectionMap = typeof projectionMap

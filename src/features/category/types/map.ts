@@ -1,5 +1,5 @@
 import type { EventDeciderMap, ProjectionMap, ReducerMap } from 'revion'
-import type { CategoryReadModel } from '../../../shared/read-models/category-read-model'
+import type { CategoryReadModel } from '../../../shared/read-models'
 import type { CategoryCommand, CategoryEvent, CategoryState } from './command'
 
 export const deciderMap = {

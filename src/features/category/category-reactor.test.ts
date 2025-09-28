@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 import { reactorFixture, zeroId } from 'revion'
-import type { CategoryReadModel } from '../../shared/read-models/category-read-model'
+import type { CategoryReadModel } from '../../shared/read-models'
 import { categoryReactor } from './category-reactor'
 
 describe('[features] category reactor', () => {
