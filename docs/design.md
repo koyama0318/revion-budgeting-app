@@ -11,18 +11,17 @@ This document provides a detailed design for the Household Accounting App using 
 - **States**
 
   - `Recorded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `Edited`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
   - `Deleted`: { id: string }
 
 - **Commands**
 
   - `AddIncome`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `EditIncome`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `EditIncome`: { id: string, categoryId: string, memo?: string }
   - `DeleteIncome`: { id: string }
 
 - **Events**
   - `IncomeAdded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `IncomeEdited`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `IncomeEdited`: { id: string, categoryId?: string, memo?: string }
   - `IncomeDeleted`: { id: string }
 
 ---
@@ -32,18 +31,17 @@ This document provides a detailed design for the Household Accounting App using 
 - **States**
 
   - `Recorded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `Edited`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
   - `Deleted`: { id: string }
 
 - **Commands**
 
   - `AddExpense`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `EditExpense`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `EditExpense`: { id: string, categoryId: string, memo?: string }
   - `DeleteExpense`: { id: string }
 
 - **Events**
   - `ExpenseAdded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `ExpenseEdited`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `ExpenseEdited`: { id: string, categoryId?: string, memo?: string }
   - `ExpenseDeleted`: { id: string }
 
 ---
@@ -52,19 +50,18 @@ This document provides a detailed design for the Household Accounting App using 
 
 - **States**
 
-  - `Created`: { id: string, name: string, type: 'Income' | 'Expense', color?: string, budget?: number }
-  - `Edited`: { id: string, name?: string, color?: string, budget?: number }
-  - `Deleted`: { id: string }
+  - `Active`: { id: string, name: string }
+  - `Inactive`: { id: string }
 
 - **Commands**
 
-  - `AddCategory`: { id: string, name: string, type: 'Income' | 'Expense', color?: string, budget?: number }
-  - `EditCategory`: { id: string, name?: string, color?: string, budget?: number }
+  - `AddCategory`: { id: string, name: string }
+  - `EditCategory`: { id: string, name?: string }
   - `DeleteCategory`: { id: string }
 
 - **Events**
-  - `CategoryAdded`: { id: string, name: string, type: 'Income' | 'Expense', color?: string, budget?: number }
-  - `CategoryEdited`: { id: string, name?: string, color?: string, budget?: number }
+  - `CategoryAdded`: { id: string, name: string }
+  - `CategoryEdited`: { id: string, name?: string }
   - `CategoryDeleted`: { id: string }
 
 ---
@@ -73,7 +70,7 @@ This document provides a detailed design for the Household Accounting App using 
 
 - `IncomeList`: { incomes: Array<{ id: string, amount: number, date: string, categoryId: string, memo?: string }> }
 - `ExpenseList`: { expenses: Array<{ id: string, amount: number, date: string, categoryId: string, memo?: string }> }
-- `CategoryList`: { categories: Array<{ id: string, name: string, type: 'Income' | 'Expense', color?: string, budget?: number }> }
+- `CategoryList`: { categories: Array<{ id: string, name: string }> }
 - `MonthlyReport`: { month: string, totalIncome: number, totalExpense: number, byCategory: Record<string, number> }
 
 ---
@@ -84,27 +81,23 @@ This document provides a detailed design for the Household Accounting App using 
 
 | command      | state    | event         |
 | ------------ | -------- | ------------- |
+| AddIncome    | -        | IncomeAdded   |
 | AddIncome    | Recorded | IncomeAdded   |
-| AddIncome    | Edited   | IncomeAdded   |
 | AddIncome    | Deleted  | IncomeAdded   |
 | EditIncome   | Recorded | IncomeEdited  |
-| EditIncome   | Edited   | IncomeEdited  |
 | EditIncome   | Deleted  | None / Error  |
 | DeleteIncome | Recorded | IncomeDeleted |
-| DeleteIncome | Edited   | IncomeDeleted |
 | DeleteIncome | Deleted  | None / Error  |
 
 ### Reducer
 
 | event         | state    | newState |
 | ------------- | -------- | -------- |
+| IncomeAdded   | -        | Recorded |
 | IncomeAdded   | Recorded | Recorded |
-| IncomeAdded   | Edited   | Recorded |
 | IncomeAdded   | Deleted  | Recorded |
-| IncomeEdited  | Recorded | Edited   |
-| IncomeEdited  | Edited   | Edited   |
+| IncomeEdited  | Recorded | Recorded |
 | IncomeDeleted | Recorded | Deleted  |
-| IncomeDeleted | Edited   | Deleted  |
 
 ### Policy
 
@@ -135,27 +128,23 @@ This document provides a detailed design for the Household Accounting App using 
 
 | command       | state    | event          |
 | ------------- | -------- | -------------- |
+| AddExpense    | -        | ExpenseAdded   |
 | AddExpense    | Recorded | ExpenseAdded   |
-| AddExpense    | Edited   | ExpenseAdded   |
 | AddExpense    | Deleted  | ExpenseAdded   |
 | EditExpense   | Recorded | ExpenseEdited  |
-| EditExpense   | Edited   | ExpenseEdited  |
 | EditExpense   | Deleted  | None / Error   |
 | DeleteExpense | Recorded | ExpenseDeleted |
-| DeleteExpense | Edited   | ExpenseDeleted |
 | DeleteExpense | Deleted  | None / Error   |
 
 ### Reducer
 
 | event          | state    | newState |
 | -------------- | -------- | -------- |
+| ExpenseAdded   | -        | Recorded |
 | ExpenseAdded   | Recorded | Recorded |
-| ExpenseAdded   | Edited   | Recorded |
 | ExpenseAdded   | Deleted  | Recorded |
-| ExpenseEdited  | Recorded | Edited   |
-| ExpenseEdited  | Edited   | Edited   |
+| ExpenseEdited  | Recorded | Recorded |
 | ExpenseDeleted | Recorded | Deleted  |
-| ExpenseDeleted | Edited   | Deleted  |
 
 ### Policy
 
@@ -184,19 +173,25 @@ This document provides a detailed design for the Household Accounting App using 
 
 ### Decider
 
-| command        | state  | event           |
-| -------------- | ------ | --------------- |
-| AddCategory    |        | CategoryAdded   |
-| EditCategory   | Active | CategoryEdited  |
-| DeleteCategory | Active | CategoryDeleted |
+| command        | state    | event           |
+| -------------- | -------- | --------------- |
+| AddCategory    | -        | CategoryAdded   |
+| AddCategory    | Active   | CategoryAdded   |
+| AddCategory    | Inactive | CategoryAdded   |
+| EditCategory   | Active   | CategoryEdited  |
+| EditCategory   | Inactive | None / Error    |
+| DeleteCategory | Active   | CategoryDeleted |
+| DeleteCategory | Inactive | None / Error    |
 
 ### Reducer
 
-| event           | state  | newState |
-| --------------- | ------ | -------- |
-| CategoryAdded   |        | Created  |
-| CategoryEdited  | Active | Edited   |
-| CategoryDeleted | Active | Deleted  |
+| event           | state    | newState |
+| --------------- | -------- | -------- |
+| CategoryAdded   | -        | Active   |
+| CategoryAdded   | Active   | Active   |
+| CategoryAdded   | Inactive | Active   |
+| CategoryEdited  | Active   | Active   |
+| CategoryDeleted | Active   | Inactive |
 
 ### Policy
 
