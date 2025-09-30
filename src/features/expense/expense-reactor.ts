@@ -1,8 +1,8 @@
 import type { Policy, Projection } from 'revion'
-import { createEventReactor } from 'revion'
-import type { ExpenseReadModel } from '../../shared/read-models'
+import { createEventReactor, zeroId } from 'revion'
+import { yearMonth } from '../../shared/value-objects/year-month'
 import type { ExpenseCommand, ExpenseEvent } from './types/command'
-import type { ExpenseProjectionMap } from './types/map'
+import type { ExpenseProjectionMap, ExpenseProjections } from './types/map'
 import { projectionMap } from './types/map'
 
 const policy: Policy<ExpenseEvent, ExpenseCommand> = {
@@ -11,7 +11,7 @@ const policy: Policy<ExpenseEvent, ExpenseCommand> = {
   expenseDeleted: () => null
 }
 
-const projection: Projection<ExpenseEvent, ExpenseReadModel, ExpenseProjectionMap> = {
+const projection: Projection<ExpenseEvent, ExpenseProjections, ExpenseProjectionMap> = {
   expenseAdded: {
     expense: ({ ctx, event }) => ({
       type: 'expense',
@@ -20,6 +20,16 @@ const projection: Projection<ExpenseEvent, ExpenseReadModel, ExpenseProjectionMa
       date: event.payload.date,
       categoryId: event.payload.categoryId,
       memo: event.payload.memo,
+      createdAt: ctx.timestamp,
+      updatedAt: ctx.timestamp,
+      deletedAt: undefined
+    }),
+    monthlyReport: ({ ctx, event }) => ({
+      id: zeroId('monthlyReport').value,
+      type: 'monthlyReport',
+      month: yearMonth(event.payload.date) ?? '',
+      totalIncome: 0,
+      totalExpense: event.payload.amount,
       createdAt: ctx.timestamp,
       updatedAt: ctx.timestamp
     })
@@ -35,11 +45,15 @@ const projection: Projection<ExpenseEvent, ExpenseReadModel, ExpenseProjectionMa
     expense: ({ ctx, readModel }) => {
       readModel.updatedAt = ctx.timestamp
       readModel.deletedAt = ctx.timestamp
+    },
+    monthlyReport: ({ ctx, readModel, event }) => {
+      readModel.totalExpense = readModel.totalExpense - event.payload.amount
+      readModel.updatedAt = ctx.timestamp
     }
   }
 }
 
-export const expenseReactor = createEventReactor<ExpenseEvent, ExpenseCommand, ExpenseReadModel>()
+export const expenseReactor = createEventReactor<ExpenseEvent, ExpenseCommand, ExpenseProjections>()
   .type('expense')
   .policy(policy)
   .projectionWithMap(projection, projectionMap)

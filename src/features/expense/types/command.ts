@@ -7,7 +7,7 @@ export type ExpenseState =
       type: 'recorded'
       id: ExpenseId
       amount: number
-      date: string
+      date: Date
       categoryId: string
       memo?: string
     }
@@ -19,7 +19,7 @@ export type ExpenseCommand =
       id: ExpenseId
       payload: {
         amount: number
-        date: string
+        date: Date
         categoryId: string
         memo?: string
       }
@@ -38,11 +38,15 @@ export type ExpenseEvent =
   | {
       type: 'expenseAdded'
       id: ExpenseId
-      payload: { amount: number; date: string; categoryId: string; memo?: string }
+      payload: { amount: number; date: Date; categoryId: string; memo?: string }
     }
   | {
       type: 'expenseEdited'
       id: ExpenseId
       payload: { categoryId?: string; memo?: string }
     }
-  | { type: 'expenseDeleted'; id: ExpenseId }
+  | {
+      type: 'expenseDeleted'
+      id: ExpenseId
+      payload: { date: Date; categoryId: string; amount: number }
+    }

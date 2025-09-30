@@ -5,6 +5,7 @@ import type { ExpenseCommand, ExpenseEvent, ExpenseState } from './types/command
 
 describe('[features] expense aggregate', () => {
   const expenseId = zeroId('expense')
+  const date = new Date('2021-01-01')
 
   describe('add expense command', () => {
     test('handles add command and creates expense', () => {
@@ -14,7 +15,7 @@ describe('[features] expense aggregate', () => {
           id: expenseId,
           payload: {
             amount: 100,
-            date: '2021-01-01',
+            date: date,
             categoryId: '1',
             memo: 'memo'
           }
@@ -27,7 +28,7 @@ describe('[features] expense aggregate', () => {
             expect(ctx.state.after.type).toBe('recorded')
             if (ctx.state.after.type === 'recorded') {
               expect(ctx.state.after.amount).toBe(100)
-              expect(ctx.state.after.date).toBe('2021-01-01')
+              expect(ctx.state.after.date).toEqual(date)
               expect(ctx.state.after.categoryId).toBe('1')
               expect(ctx.state.after.memo).toBe('memo')
               expect(ctx.state.after.version).toBe(1)
@@ -51,7 +52,7 @@ describe('[features] expense aggregate', () => {
           id: expenseId,
           payload: {
             amount: 100,
-            date: '2021-01-01',
+            date: date,
             categoryId: '1',
             memo: 'memo'
           }
@@ -88,18 +89,21 @@ describe('[features] expense aggregate', () => {
 
   describe('delete expense command', () => {
     test('handles delete command and delete expense', () => {
-      aggregateFixture(expense)
+      aggregateFixture<ExpenseState, ExpenseCommand, ExpenseEvent>(expense)
         .given({
           type: 'expenseAdded',
           id: expenseId,
-          payload: { name: 'expense' }
-        })
-        .whenMany([
-          {
-            type: 'deleteExpense',
-            id: expenseId
+          payload: {
+            amount: 100,
+            date: new Date(),
+            categoryId: '1',
+            memo: 'memo'
           }
-        ])
+        })
+        .when({
+          type: 'deleteExpense',
+          id: expenseId
+        })
         .then(fixture => {
           fixture.assert(ctx => {
             expect(ctx.error).toBeNull()

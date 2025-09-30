@@ -18,10 +18,15 @@ const decider: EventDecider<ExpenseState, ExpenseCommand, ExpenseEvent, ExpenseD
       payload: command.payload
     }
   },
-  deleteExpense: ({ command }) => {
+  deleteExpense: ({ state, command }) => {
     return {
       type: 'expenseDeleted',
-      id: command.id
+      id: command.id,
+      payload: {
+        date: state.date,
+        categoryId: state.categoryId,
+        amount: state.amount
+      }
     }
   }
 }
