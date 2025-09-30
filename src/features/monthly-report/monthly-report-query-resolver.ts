@@ -1,7 +1,7 @@
 import type { QueryOption, QueryResolver } from 'revion'
 import { createQuerySource } from 'revion'
-import type { MonthlyReportQuery, MonthlyReportQueryResult } from './types'
 import type { MonthlyReportReadModel } from '../../shared/read-models'
+import type { MonthlyReportQuery, MonthlyReportQueryResult } from './types'
 
 const resolver: QueryResolver<MonthlyReportQuery, MonthlyReportQueryResult> = {
   monthlyReports: async ({ query, store }) => {

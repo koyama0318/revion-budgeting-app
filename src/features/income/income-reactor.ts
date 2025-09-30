@@ -24,12 +24,12 @@ const projection: Projection<IncomeEvent, IncomeProjections, IncomeProjectionMap
       updatedAt: ctx.timestamp,
       deletedAt: undefined
     }),
-    monthlyReport: ({ ctx, event }) => ({
-      id: zeroId('monthlyReport').value,
+    monthlyReport: ({ ctx, event, readModel }) => ({
+      id: readModel.id ?? zeroId('monthlyReport').value,
       type: 'monthlyReport',
       month: yearMonth(event.payload.date) ?? '',
-      totalIncome: event.payload.amount,
-      totalExpense: 0,
+      totalIncome: (readModel.totalIncome ?? 0) + event.payload.amount,
+      totalExpense: readModel.totalExpense ?? 0,
       createdAt: ctx.timestamp,
       updatedAt: ctx.timestamp
     })

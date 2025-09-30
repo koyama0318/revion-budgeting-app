@@ -26,7 +26,8 @@ export const projectionMap = {
     { readModel: 'income' },
     {
       readModel: 'monthlyReport',
-      where: event => ({ by: 'month', operator: 'eq', value: yearMonth(event.payload.date) ?? '' })
+      where: event => ({ by: 'month', operator: 'eq', value: yearMonth(event.payload.date) ?? '' }),
+      mode: 'upsert'
     }
   ],
   incomeEdited: [{ readModel: 'income' }],
