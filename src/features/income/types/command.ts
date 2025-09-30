@@ -1,4 +1,5 @@
 import type { AggregateId } from 'revion'
+import type { CategoryId } from '../../category/types'
 
 export type IncomeId = AggregateId<'income'>
 
@@ -8,7 +9,7 @@ export type IncomeState =
       id: IncomeId
       amount: number
       date: Date
-      categoryId: string
+      categoryId: CategoryId
       memo?: string
     }
   | { type: 'deleted'; id: IncomeId }
@@ -20,7 +21,7 @@ export type IncomeCommand =
       payload: {
         amount: number
         date: Date
-        categoryId: string
+        categoryId: CategoryId
         memo?: string
       }
     }
@@ -28,7 +29,7 @@ export type IncomeCommand =
       type: 'editIncome'
       id: IncomeId
       payload: {
-        categoryId: string
+        categoryId: CategoryId
         memo?: string
       }
     }
@@ -38,15 +39,15 @@ export type IncomeEvent =
   | {
       type: 'incomeAdded'
       id: IncomeId
-      payload: { amount: number; date: Date; categoryId: string; memo?: string }
+      payload: { amount: number; date: Date; categoryId: CategoryId; memo?: string }
     }
   | {
       type: 'incomeEdited'
       id: IncomeId
-      payload: { categoryId?: string; memo?: string }
+      payload: { categoryId?: CategoryId; memo?: string }
     }
   | {
       type: 'incomeDeleted'
       id: IncomeId
-      payload: { date: Date; categoryId: string; amount: number }
+      payload: { date: Date; categoryId: CategoryId; amount: number }
     }

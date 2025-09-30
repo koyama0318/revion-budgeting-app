@@ -18,17 +18,25 @@ describe('[integration] income api', () => {
 
   test('should create and edit income, then query results', async () => {
     // Arrange
+    const categoryId1 = zeroId('category')
+    const categoryId2 = zeroId('category')
+
     const incomeId = zeroId('income')
     const commands: IncomeCommand[] = [
       {
         type: 'addIncome',
         id: incomeId,
-        payload: { amount: 100, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: {
+          amount: 100,
+          date: new Date('2025-10-01'),
+          categoryId: categoryId1,
+          memo: 'memo'
+        }
       },
       {
         type: 'editIncome',
         id: incomeId,
-        payload: { categoryId: '2', memo: 'memo2' }
+        payload: { categoryId: categoryId2, memo: 'memo2' }
       }
     ]
 
@@ -62,7 +70,7 @@ describe('[integration] income api', () => {
             id: incomeId.value,
             amount: 100,
             date: new Date('2025-10-01'),
-            categoryId: '2',
+            categoryId: categoryId2,
             memo: 'memo2',
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date),
@@ -82,7 +90,7 @@ describe('[integration] income api', () => {
           id: incomeId.value,
           amount: 100,
           date: new Date('2025-10-01'),
-          categoryId: '2',
+          categoryId: categoryId2,
           memo: 'memo2',
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
@@ -110,12 +118,19 @@ describe('[integration] income api', () => {
 
   test('should create and delete income, then query results', async () => {
     // Arrange
+    const categoryId1 = zeroId('category')
+
     const incomeId = zeroId('income')
     const commands: IncomeCommand[] = [
       {
         type: 'addIncome',
         id: incomeId,
-        payload: { amount: 100, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: {
+          amount: 100,
+          date: new Date('2025-10-01'),
+          categoryId: categoryId1,
+          memo: 'memo'
+        }
       },
       {
         type: 'deleteIncome',
@@ -153,7 +168,7 @@ describe('[integration] income api', () => {
             id: incomeId.value,
             amount: 100,
             date: new Date('2025-10-01'),
-            categoryId: '1',
+            categoryId: categoryId1,
             memo: 'memo',
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date),
@@ -173,7 +188,7 @@ describe('[integration] income api', () => {
           id: incomeId.value,
           amount: 100,
           date: new Date('2025-10-01'),
-          categoryId: '1',
+          categoryId: categoryId1,
           memo: 'memo',
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),

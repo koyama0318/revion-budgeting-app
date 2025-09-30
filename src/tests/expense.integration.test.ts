@@ -18,17 +18,20 @@ describe('[integration] expense api', () => {
 
   test('should create and edit expense, then query results', async () => {
     // Arrange
+    const category1 = zeroId('category')
+    const category2 = zeroId('category')
+
     const expenseId = zeroId('expense')
     const commands: ExpenseCommand[] = [
       {
         type: 'addExpense',
         id: expenseId,
-        payload: { amount: 100, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 100, date: new Date('2025-10-01'), categoryId: category1, memo: 'memo' }
       },
       {
         type: 'editExpense',
         id: expenseId,
-        payload: { categoryId: '2', memo: 'memo2' }
+        payload: { categoryId: category2, memo: 'memo2' }
       }
     ]
 
@@ -62,7 +65,7 @@ describe('[integration] expense api', () => {
             id: expenseId.value,
             amount: 100,
             date: new Date('2025-10-01'),
-            categoryId: '2',
+            categoryId: category2,
             memo: 'memo2',
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date),
@@ -82,7 +85,7 @@ describe('[integration] expense api', () => {
           id: expenseId.value,
           amount: 100,
           date: new Date('2025-10-01'),
-          categoryId: '2',
+          categoryId: category2,
           memo: 'memo2',
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
@@ -110,12 +113,14 @@ describe('[integration] expense api', () => {
 
   test('should create and delete expense, then query results', async () => {
     // Arrange
+    const categoryId = zeroId('category')
+
     const expenseId = zeroId('expense')
     const commands: ExpenseCommand[] = [
       {
         type: 'addExpense',
         id: expenseId,
-        payload: { amount: 100, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 100, date: new Date('2025-10-01'), categoryId, memo: 'memo' }
       },
       {
         type: 'deleteExpense',
@@ -153,7 +158,7 @@ describe('[integration] expense api', () => {
             id: expenseId.value,
             amount: 100,
             date: new Date('2025-10-01'),
-            categoryId: '1',
+            categoryId: categoryId,
             memo: 'memo',
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date),
@@ -173,7 +178,7 @@ describe('[integration] expense api', () => {
           id: expenseId.value,
           amount: 100,
           date: new Date('2025-10-01'),
-          categoryId: '1',
+          categoryId: categoryId,
           memo: 'memo',
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),

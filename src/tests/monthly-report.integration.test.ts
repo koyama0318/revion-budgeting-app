@@ -26,34 +26,33 @@ describe('[integration] monthly report api', () => {
     const incomeId2 = zeroId('income')
     const expenseId1 = zeroId('expense')
     const expenseId2 = zeroId('expense')
+    const categoryId = zeroId('category')
 
     const commands = [
       {
         type: 'addIncome',
         id: incomeId1,
-        payload: { amount: 2000, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 2000, date: new Date('2025-10-01'), categoryId, memo: 'memo' }
       } as IncomeCommand,
       {
         type: 'addExpense',
         id: expenseId1,
-        payload: { amount: 500, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 500, date: new Date('2025-10-01'), categoryId, memo: 'memo' }
       } as ExpenseCommand,
       {
         type: 'addIncome',
         id: incomeId2,
-        payload: { amount: 1000, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 1000, date: new Date('2025-10-01'), categoryId, memo: 'memo' }
       } as IncomeCommand,
       {
         type: 'addExpense',
         id: expenseId2,
-        payload: { amount: 2000, date: new Date('2025-10-01'), categoryId: '1', memo: 'memo' }
+        payload: { amount: 2000, date: new Date('2025-10-01'), categoryId, memo: 'memo' }
       } as ExpenseCommand
     ]
 
     // Act
     await handler.commandMany(commands)
-
-    handler.log()
 
     const res1 = await handler.query({
       type: 'incomes',

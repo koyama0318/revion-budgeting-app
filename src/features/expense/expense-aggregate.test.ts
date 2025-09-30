@@ -9,6 +9,8 @@ describe('[features] expense aggregate', () => {
 
   describe('add expense command', () => {
     test('handles add command and creates expense', () => {
+      const categoryId = zeroId('category')
+
       aggregateFixture<ExpenseState, ExpenseCommand, ExpenseEvent>(expense)
         .when({
           type: 'addExpense',
@@ -16,7 +18,7 @@ describe('[features] expense aggregate', () => {
           payload: {
             amount: 100,
             date: date,
-            categoryId: '1',
+            categoryId,
             memo: 'memo'
           }
         })
@@ -29,7 +31,7 @@ describe('[features] expense aggregate', () => {
             if (ctx.state.after.type === 'recorded') {
               expect(ctx.state.after.amount).toBe(100)
               expect(ctx.state.after.date).toEqual(date)
-              expect(ctx.state.after.categoryId).toBe('1')
+              expect(ctx.state.after.categoryId).toEqual(categoryId)
               expect(ctx.state.after.memo).toBe('memo')
               expect(ctx.state.after.version).toBe(1)
             }
@@ -46,6 +48,9 @@ describe('[features] expense aggregate', () => {
 
   describe('edit expense command', () => {
     test('handles edit command and edit expense', () => {
+      const categoryId1 = zeroId('category')
+      const categoryId2 = zeroId('category')
+
       aggregateFixture<ExpenseState, ExpenseCommand, ExpenseEvent>(expense)
         .given({
           type: 'expenseAdded',
@@ -53,7 +58,7 @@ describe('[features] expense aggregate', () => {
           payload: {
             amount: 100,
             date: date,
-            categoryId: '1',
+            categoryId: categoryId1,
             memo: 'memo'
           }
         })
@@ -61,7 +66,7 @@ describe('[features] expense aggregate', () => {
           type: 'editExpense',
           id: expenseId,
           payload: {
-            categoryId: '2',
+            categoryId: categoryId2,
             memo: 'memo2'
           }
         })
@@ -72,7 +77,7 @@ describe('[features] expense aggregate', () => {
             expect(ctx.state.before.type).toBe('recorded')
             expect(ctx.state.after.type).toBe('recorded')
             if (ctx.state.after.type === 'recorded') {
-              expect(ctx.state.after.categoryId).toBe('2')
+              expect(ctx.state.after.categoryId).toEqual(categoryId2)
               expect(ctx.state.after.memo).toBe('memo2')
             }
 
@@ -89,6 +94,8 @@ describe('[features] expense aggregate', () => {
 
   describe('delete expense command', () => {
     test('handles delete command and delete expense', () => {
+      const categoryId = zeroId('category')
+
       aggregateFixture<ExpenseState, ExpenseCommand, ExpenseEvent>(expense)
         .given({
           type: 'expenseAdded',
@@ -96,7 +103,7 @@ describe('[features] expense aggregate', () => {
           payload: {
             amount: 100,
             date: new Date(),
-            categoryId: '1',
+            categoryId,
             memo: 'memo'
           }
         })
