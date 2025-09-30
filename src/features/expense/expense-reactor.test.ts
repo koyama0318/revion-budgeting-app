@@ -29,8 +29,8 @@ describe('[features] expense reactor', () => {
               expect(expense.date).toBe('2021-01-01')
               expect(expense.categoryId).toBe('1')
               expect(expense.memo).toBe('memo')
-              expect(expense.createdAt).toBe(now)
-              expect(expense.updatedAt).toBe(now)
+              expect(expense.createdAt).toEqual(now)
+              expect(expense.updatedAt).toEqual(now)
             }
           })
         })
@@ -70,7 +70,7 @@ describe('[features] expense reactor', () => {
               expect(expense).toBeDefined()
               expect(expense.categoryId).toBe('2')
               expect(expense.memo).toBe('memo2')
-              expect(expense.updatedAt).toBe(updatedAt)
+              expect(expense.updatedAt).toEqual(updatedAt)
             }
           })
         })
@@ -111,8 +111,8 @@ describe('[features] expense reactor', () => {
               expect(expense.date).toBe('2021-01-01')
               expect(expense.categoryId).toBe('1')
               expect(expense.memo).toBe('memo')
-              expect(expense.updatedAt).toBe(deletedAt)
-              expect(expense.deletedAt).toBe(deletedAt)
+              expect(expense.updatedAt).toEqual(deletedAt)
+              expect(expense.deletedAt).toEqual(deletedAt)
             }
           })
         })

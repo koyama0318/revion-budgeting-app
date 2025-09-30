@@ -18,10 +18,15 @@ const decider: EventDecider<IncomeState, IncomeCommand, IncomeEvent, IncomeDecid
       payload: command.payload
     }
   },
-  deleteIncome: ({ command }) => {
+  deleteIncome: ({ state, command }) => {
     return {
       type: 'incomeDeleted',
-      id: command.id
+      id: command.id,
+      payload: {
+        date: state.date,
+        categoryId: state.categoryId,
+        amount: state.amount
+      }
     }
   }
 }

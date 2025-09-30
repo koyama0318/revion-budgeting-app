@@ -1,5 +1,6 @@
 import type { EventDeciderMap, ProjectionMap, ReducerMap } from 'revion'
-import type { IncomeReadModel } from '../../../shared/read-models'
+import type { IncomeReadModel, MonthlyReportReadModel } from '../../../shared/read-models'
+import { yearMonth } from '../../../shared/value-objects/year-month'
 import type { IncomeCommand, IncomeEvent, IncomeState } from './command'
 
 export const deciderMap = {
@@ -18,10 +19,25 @@ export const reducerMap = {
 
 export type IncomeReducerMap = typeof reducerMap
 
+export type IncomeProjections = IncomeReadModel | MonthlyReportReadModel
+
 export const projectionMap = {
-  incomeAdded: [{ readModel: 'income' }],
+  incomeAdded: [
+    { readModel: 'income' },
+    {
+      readModel: 'monthlyReport',
+      where: event => ({ by: 'month', operator: 'eq', value: yearMonth(event.payload.date) ?? '' })
+    }
+  ],
   incomeEdited: [{ readModel: 'income' }],
-  incomeDeleted: [{ readModel: 'income' }]
-} satisfies ProjectionMap<IncomeEvent, IncomeReadModel>
+  incomeDeleted: [
+    { readModel: 'income' },
+    {
+      readModel: 'monthlyReport',
+      where: event => ({ by: 'month', operator: 'eq', value: yearMonth(event.payload.date) ?? '' }),
+      mode: 'update'
+    }
+  ]
+} satisfies ProjectionMap<IncomeEvent, IncomeProjections>
 
 export type IncomeProjectionMap = typeof projectionMap

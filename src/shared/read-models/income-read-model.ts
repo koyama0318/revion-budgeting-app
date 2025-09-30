@@ -2,7 +2,7 @@ export type IncomeReadModel = {
   type: 'income'
   id: string
   amount: number
-  date: string
+  date: Date
   categoryId: string
   memo?: string
   createdAt: Date

@@ -26,8 +26,8 @@ describe('[features] category reactor', () => {
               const category = ctx.readModel.after.category[categoryId.value] as CategoryReadModel
               expect(category).toBeDefined()
               expect(category.name).toBe('category1')
-              expect(category.createdAt).toBe(now)
-              expect(category.updatedAt).toBe(now)
+              expect(category.createdAt).toEqual(now)
+              expect(category.updatedAt).toEqual(now)
             }
           })
         })
@@ -63,7 +63,7 @@ describe('[features] category reactor', () => {
               const category = ctx.readModel.after.category[categoryId.value] as CategoryReadModel
               expect(category).toBeDefined()
               expect(category.name).toBe('category2')
-              expect(category.updatedAt).toBe(updatedAt)
+              expect(category.updatedAt).toEqual(updatedAt)
             }
           })
         })
@@ -98,8 +98,8 @@ describe('[features] category reactor', () => {
               const category = ctx.readModel.after.category[categoryId.value] as CategoryReadModel
               expect(category).toBeDefined()
               expect(category.name).toBe('category1')
-              expect(category.updatedAt).toBe(deletedAt)
-              expect(category.deletedAt).toBe(deletedAt)
+              expect(category.updatedAt).toEqual(deletedAt)
+              expect(category.deletedAt).toEqual(deletedAt)
             }
           })
         })

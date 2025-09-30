@@ -7,7 +7,7 @@ export type IncomeState =
       type: 'recorded'
       id: IncomeId
       amount: number
-      date: string
+      date: Date
       categoryId: string
       memo?: string
     }
@@ -19,7 +19,7 @@ export type IncomeCommand =
       id: IncomeId
       payload: {
         amount: number
-        date: string
+        date: Date
         categoryId: string
         memo?: string
       }
@@ -38,11 +38,15 @@ export type IncomeEvent =
   | {
       type: 'incomeAdded'
       id: IncomeId
-      payload: { amount: number; date: string; categoryId: string; memo?: string }
+      payload: { amount: number; date: Date; categoryId: string; memo?: string }
     }
   | {
       type: 'incomeEdited'
       id: IncomeId
       payload: { categoryId?: string; memo?: string }
     }
-  | { type: 'incomeDeleted'; id: IncomeId }
+  | {
+      type: 'incomeDeleted'
+      id: IncomeId
+      payload: { date: Date; categoryId: string; amount: number }
+    }
