@@ -10,19 +10,19 @@ This document provides a detailed design for the Household Accounting App using 
 
 - **States**
 
-  - `Recorded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `Recorded`: { id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string }
   - `Deleted`: { id: string }
 
 - **Commands**
 
-  - `AddIncome`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `EditIncome`: { id: string, categoryId: string, memo?: string }
+  - `AddIncome`: { id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string }
+  - `EditIncome`: { id: string, categoryId: CategoryId, memo?: string }
   - `DeleteIncome`: { id: string }
 
 - **Events**
-  - `IncomeAdded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `IncomeEdited`: { id: string, categoryId?: string, memo?: string }
-  - `IncomeDeleted`: { id: string }
+  - `incomeAdded`: { id: string, payload: { amount: number, date: Date, categoryId: CategoryId, memo?: string } }
+  - `incomeEdited`: { id: string, payload: { categoryId?: CategoryId, memo?: string } }
+  - `incomeDeleted`: { id: string, payload: { date: Date, categoryId: CategoryId, amount: number } }
 
 ---
 
@@ -30,19 +30,19 @@ This document provides a detailed design for the Household Accounting App using 
 
 - **States**
 
-  - `Recorded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
+  - `Recorded`: { id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string }
   - `Deleted`: { id: string }
 
 - **Commands**
 
-  - `AddExpense`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `EditExpense`: { id: string, categoryId: string, memo?: string }
+  - `AddExpense`: { id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string }
+  - `EditExpense`: { id: string, categoryId: CategoryId, memo?: string }
   - `DeleteExpense`: { id: string }
 
 - **Events**
-  - `ExpenseAdded`: { id: string, amount: number, date: string, categoryId: string, memo?: string }
-  - `ExpenseEdited`: { id: string, categoryId?: string, memo?: string }
-  - `ExpenseDeleted`: { id: string }
+  - `expenseAdded`: { id: string, payload: { amount: number, date: Date, categoryId: CategoryId, memo?: string } }
+  - `expenseEdited`: { id: string, payload: { categoryId?: string, memo?: string } }
+  - `expenseDeleted`: { id: string, payload: { date: Date, categoryId: CategoryId, amount: number } }
 
 ---
 
@@ -60,18 +60,18 @@ This document provides a detailed design for the Household Accounting App using 
   - `DeleteCategory`: { id: string }
 
 - **Events**
-  - `CategoryAdded`: { id: string, name: string }
-  - `CategoryEdited`: { id: string, name?: string }
-  - `CategoryDeleted`: { id: string }
+  - `categoryAdded`: { id: string, payload: { name: string } }
+  - `categoryEdited`: { id: string, payload: { name?: string } }
+  - `categoryDeleted`: { id: string }
 
 ---
 
 ### ReadModels
 
-- `IncomeList`: { incomes: Array<{ id: string, amount: number, date: string, categoryId: string, memo?: string }> }
-- `ExpenseList`: { expenses: Array<{ id: string, amount: number, date: string, categoryId: string, memo?: string }> }
-- `CategoryList`: { categories: Array<{ id: string, name: string }> }
-- `MonthlyReport`: { month: string, totalIncome: number, totalExpense: number, byCategory: Record<string, number> }
+- `IncomeReadModel`: { type: 'income', id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string, createdAt: Date, updatedAt: Date, deletedAt?: Date }
+- `ExpenseReadModel`: { type: 'expense', id: string, amount: number, date: Date, categoryId: CategoryId, memo?: string, createdAt: Date, updatedAt: Date, deletedAt?: Date }
+- `CategoryReadModel`: { type: 'category', id: string, name: string, createdAt: Date, updatedAt: Date, deletedAt?: Date }
+- `MonthlyReportReadModel`: { type: 'monthlyReport', id: string, month: string, totalIncome: number, totalExpense: number, createdAt: Date, updatedAt: Date }
 
 ---
 
@@ -81,23 +81,17 @@ This document provides a detailed design for the Household Accounting App using 
 
 | command      | state    | event         |
 | ------------ | -------- | ------------- |
-| AddIncome    | -        | IncomeAdded   |
-| AddIncome    | Recorded | IncomeAdded   |
-| AddIncome    | Deleted  | IncomeAdded   |
-| EditIncome   | Recorded | IncomeEdited  |
-| EditIncome   | Deleted  | None / Error  |
-| DeleteIncome | Recorded | IncomeDeleted |
-| DeleteIncome | Deleted  | None / Error  |
+| addIncome    | -        | incomeAdded   |
+| editIncome   | recorded | incomeEdited  |
+| deleteIncome | recorded | incomeDeleted |
 
 ### Reducer
 
 | event         | state    | newState |
 | ------------- | -------- | -------- |
-| IncomeAdded   | -        | Recorded |
-| IncomeAdded   | Recorded | Recorded |
-| IncomeAdded   | Deleted  | Recorded |
-| IncomeEdited  | Recorded | Recorded |
-| IncomeDeleted | Recorded | Deleted  |
+| incomeAdded   | -        | recorded |
+| incomeEdited  | recorded | recorded |
+| incomeDeleted | recorded | deleted  |
 
 ### Policy
 
@@ -107,18 +101,20 @@ This document provides a detailed design for the Household Accounting App using 
 
 ### Projection
 
-| event         | readModel  | newReadModel               |
-| ------------- | ---------- | -------------------------- |
-| IncomeAdded   | IncomeList | Append the added income    |
-| IncomeEdited  | IncomeList | Update the targeted income |
-| IncomeDeleted | IncomeList | Remove the targeted income |
+| event         | readModel              | newReadModel               |
+| ------------- | ---------------------- | -------------------------- |
+| incomeAdded   | IncomeReadModel        | Append the added income    |
+| incomeAdded   | MonthlyReportReadModel | Update monthly report      |
+| incomeEdited  | IncomeReadModel        | Update the targeted income |
+| incomeDeleted | IncomeReadModel        | Remove the targeted income |
+| incomeDeleted | MonthlyReportReadModel | Update monthly report      |
 
 ### Query
 
-| query             | readModel  | result                         |
-| ----------------- | ---------- | ------------------------------ |
-| GetIncomeList     | IncomeList | List of all incomes            |
-| GetIncomeById(id) | IncomeList | Details of the targeted income |
+| query   | readModel       | result                         |
+| ------- | --------------- | ------------------------------ |
+| incomes | IncomeReadModel | List of all incomes            |
+| income  | IncomeReadModel | Details of the targeted income |
 
 ---
 
@@ -128,23 +124,17 @@ This document provides a detailed design for the Household Accounting App using 
 
 | command       | state    | event          |
 | ------------- | -------- | -------------- |
-| AddExpense    | -        | ExpenseAdded   |
-| AddExpense    | Recorded | ExpenseAdded   |
-| AddExpense    | Deleted  | ExpenseAdded   |
-| EditExpense   | Recorded | ExpenseEdited  |
-| EditExpense   | Deleted  | None / Error   |
-| DeleteExpense | Recorded | ExpenseDeleted |
-| DeleteExpense | Deleted  | None / Error   |
+| addExpense    | -        | expenseAdded   |
+| editExpense   | recorded | expenseEdited  |
+| deleteExpense | recorded | expenseDeleted |
 
 ### Reducer
 
 | event          | state    | newState |
 | -------------- | -------- | -------- |
-| ExpenseAdded   | -        | Recorded |
-| ExpenseAdded   | Recorded | Recorded |
-| ExpenseAdded   | Deleted  | Recorded |
-| ExpenseEdited  | Recorded | Recorded |
-| ExpenseDeleted | Recorded | Deleted  |
+| expenseAdded   | -        | recorded |
+| expenseEdited  | recorded | recorded |
+| expenseDeleted | recorded | deleted  |
 
 ### Policy
 
@@ -154,18 +144,20 @@ This document provides a detailed design for the Household Accounting App using 
 
 ### Projection
 
-| event          | readModel   | newReadModel                |
-| -------------- | ----------- | --------------------------- |
-| ExpenseAdded   | ExpenseList | Append the added expense    |
-| ExpenseEdited  | ExpenseList | Update the targeted expense |
-| ExpenseDeleted | ExpenseList | Remove the targeted expense |
+| event          | readModel              | newReadModel                |
+| -------------- | ---------------------- | --------------------------- |
+| expenseAdded   | ExpenseReadModel       | Append the added expense    |
+| expenseAdded   | MonthlyReportReadModel | Update monthly report       |
+| expenseEdited  | ExpenseReadModel       | Update the targeted expense |
+| expenseDeleted | ExpenseReadModel       | Remove the targeted expense |
+| expenseDeleted | MonthlyReportReadModel | Update monthly report       |
 
 ### Query
 
-| query              | readModel   | result                          |
-| ------------------ | ----------- | ------------------------------- |
-| GetExpenseList     | ExpenseList | List of all expenses            |
-| GetExpenseById(id) | ExpenseList | Details of the targeted expense |
+| query    | readModel        | result                          |
+| -------- | ---------------- | ------------------------------- |
+| expenses | ExpenseReadModel | List of all expenses            |
+| expense  | ExpenseReadModel | Details of the targeted expense |
 
 ---
 
@@ -173,44 +165,39 @@ This document provides a detailed design for the Household Accounting App using 
 
 ### Decider
 
-| command        | state    | event           |
-| -------------- | -------- | --------------- |
-| AddCategory    | -        | CategoryAdded   |
-| AddCategory    | Active   | CategoryAdded   |
-| AddCategory    | Inactive | CategoryAdded   |
-| EditCategory   | Active   | CategoryEdited  |
-| EditCategory   | Inactive | None / Error    |
-| DeleteCategory | Active   | CategoryDeleted |
-| DeleteCategory | Inactive | None / Error    |
+| command        | state  | event           |
+| -------------- | ------ | --------------- |
+| addCategory    | -      | categoryAdded   |
+| editCategory   | active | categoryEdited  |
+| deleteCategory | active | categoryDeleted |
 
 ### Reducer
 
-| event           | state    | newState |
-| --------------- | -------- | -------- |
-| CategoryAdded   | -        | Active   |
-| CategoryAdded   | Active   | Active   |
-| CategoryAdded   | Inactive | Active   |
-| CategoryEdited  | Active   | Active   |
-| CategoryDeleted | Active   | Inactive |
+| event           | state  | newState |
+| --------------- | ------ | -------- |
+| categoryAdded   | -      | active   |
+| categoryEdited  | active | active   |
+| categoryDeleted | active | inactive |
 
 ### Policy
 
 | event          | command                              |
 | -------------- | ------------------------------------ |
-| CategoryEdited | BudgetOverrunCheckCommand (optional) |
+| categoryEdited | BudgetOverrunCheckCommand (optional) |
 
 ### Projection
 
-| event           | readModel    | newReadModel                 |
-| --------------- | ------------ | ---------------------------- |
-| CategoryAdded   | CategoryList | Append the added category    |
-| CategoryEdited  | CategoryList | Update the targeted category |
-| CategoryDeleted | CategoryList | Remove the targeted category |
+| event           | readModel         | newReadModel                 |
+| --------------- | ----------------- | ---------------------------- |
+| categoryAdded   | CategoryReadModel | Append the added category    |
+| categoryEdited  | CategoryReadModel | Update the targeted category |
+| categoryDeleted | CategoryReadModel | Remove the targeted category |
 
 ### Query
 
-| query                   | readModel                               | result                                              |
-| ----------------------- | --------------------------------------- | --------------------------------------------------- |
-| GetCategoryList         | CategoryList                            | List of all categories                              |
-| GetCategoryById(id)     | CategoryList                            | Details of the targeted category                    |
-| GetMonthlyReport(month) | IncomeList + ExpenseList + CategoryList | Monthly summary (Income/Expense total, by category) |
+| query          | readModel              | result                                 |
+| -------------- | ---------------------- | -------------------------------------- |
+| categories     | CategoryReadModel      | List of all categories                 |
+| category       | CategoryReadModel      | Details of the targeted category       |
+| monthlyReports | MonthlyReportReadModel | List of monthly reports                |
+| monthlyReport  | MonthlyReportReadModel | Details of the targeted monthly report |
