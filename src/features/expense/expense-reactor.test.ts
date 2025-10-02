@@ -5,6 +5,8 @@ import { expenseReactor } from './expense-reactor'
 
 describe('[features] expense reactor', () => {
   const expenseId = zeroId('expense')
+  const categoryId1 = zeroId('category')
+  const categoryId2 = zeroId('category')
 
   describe('add expense event received', () => {
     test('handles add event and creates expenseReadModel', () => {
@@ -15,7 +17,7 @@ describe('[features] expense reactor', () => {
         .when({
           type: 'expenseAdded',
           id: expenseId,
-          payload: { amount: 100, date: date, categoryId: '1', memo: 'memo' },
+          payload: { amount: 100, date, categoryId: categoryId2, memo: 'memo' },
           version: 1,
           timestamp: createdAt
         })
@@ -28,7 +30,7 @@ describe('[features] expense reactor', () => {
               const expense = ctx.readModel.after.expense[expenseId.value] as ExpenseReadModel
               expect(expense.amount).toBe(100)
               expect(expense.date).toEqual(date)
-              expect(expense.categoryId).toBe('1')
+              expect(expense.categoryId).toEqual(categoryId2)
               expect(expense.memo).toBe('memo')
               expect(expense.createdAt).toEqual(createdAt)
               expect(expense.updatedAt).toEqual(createdAt)
@@ -60,7 +62,7 @@ describe('[features] expense reactor', () => {
           id: expenseId.value,
           amount: 100,
           date: date,
-          categoryId: '1',
+          categoryId: categoryId1,
           memo: 'memo',
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -69,7 +71,7 @@ describe('[features] expense reactor', () => {
         .when({
           type: 'expenseEdited',
           id: expenseId,
-          payload: { categoryId: '2', memo: 'memo2' },
+          payload: { categoryId: categoryId2, memo: 'memo2' },
           version: 2,
           timestamp: updatedAt
         })
@@ -80,7 +82,7 @@ describe('[features] expense reactor', () => {
             if (ctx.readModel.after.expense) {
               const expense = ctx.readModel.after.expense[expenseId.value] as ExpenseReadModel
               expect(expense).toBeDefined()
-              expect(expense.categoryId).toBe('2')
+              expect(expense.categoryId).toEqual(categoryId2)
               expect(expense.memo).toBe('memo2')
               expect(expense.createdAt).toEqual(createdAt)
               expect(expense.updatedAt).toEqual(updatedAt)
@@ -102,7 +104,7 @@ describe('[features] expense reactor', () => {
           id: expenseId.value,
           amount: 100,
           date: date,
-          categoryId: '1',
+          categoryId: categoryId1,
           memo: 'memo',
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -120,7 +122,7 @@ describe('[features] expense reactor', () => {
         .when({
           type: 'expenseDeleted',
           id: expenseId,
-          payload: { date: date, categoryId: '1', amount: 100 },
+          payload: { date: date, categoryId: categoryId1, amount: 100 },
           version: 2,
           timestamp: deletedAt
         })
@@ -134,7 +136,7 @@ describe('[features] expense reactor', () => {
               expect(expense).toBeDefined()
               expect(expense.amount).toBe(100)
               expect(expense.date).toEqual(date)
-              expect(expense.categoryId).toBe('1')
+              expect(expense.categoryId).toEqual(categoryId1)
               expect(expense.memo).toBe('memo')
               expect(expense.updatedAt).toEqual(deletedAt)
               expect(expense.deletedAt).toEqual(deletedAt)

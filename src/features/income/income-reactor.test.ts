@@ -5,6 +5,8 @@ import { incomeReactor } from './income-reactor'
 
 describe('[features] income reactor', () => {
   const incomeId = zeroId('income')
+  const categoryId1 = zeroId('category')
+  const categoryId2 = zeroId('category')
 
   describe('add income event received', () => {
     test('handles add event and creates incomeReadModel', () => {
@@ -15,7 +17,7 @@ describe('[features] income reactor', () => {
         .when({
           type: 'incomeAdded',
           id: incomeId,
-          payload: { amount: 100, date: date, categoryId: '1', memo: 'memo' },
+          payload: { amount: 100, date: date, categoryId: categoryId1, memo: 'memo' },
           version: 1,
           timestamp: createdAt
         })
@@ -28,7 +30,7 @@ describe('[features] income reactor', () => {
               const income = ctx.readModel.after.income[incomeId.value] as IncomeReadModel
               expect(income.amount).toBe(100)
               expect(income.date).toEqual(date)
-              expect(income.categoryId).toBe('1')
+              expect(income.categoryId).toEqual(categoryId1)
               expect(income.memo).toBe('memo')
               expect(income.createdAt).toEqual(createdAt)
               expect(income.updatedAt).toEqual(createdAt)
@@ -60,7 +62,7 @@ describe('[features] income reactor', () => {
           id: incomeId.value,
           amount: 100,
           date: date,
-          categoryId: '1',
+          categoryId: categoryId1,
           memo: 'memo',
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -69,7 +71,7 @@ describe('[features] income reactor', () => {
         .when({
           type: 'incomeEdited',
           id: incomeId,
-          payload: { categoryId: '2', memo: 'memo2' },
+          payload: { categoryId: categoryId2, memo: 'memo2' },
           version: 2,
           timestamp: updatedAt
         })
@@ -80,7 +82,7 @@ describe('[features] income reactor', () => {
             if (ctx.readModel.after.income) {
               const income = ctx.readModel.after.income[incomeId.value] as IncomeReadModel
               expect(income).toBeDefined()
-              expect(income.categoryId).toBe('2')
+              expect(income.categoryId).toEqual(categoryId2)
               expect(income.memo).toBe('memo2')
               expect(income.createdAt).toEqual(createdAt)
               expect(income.updatedAt).toEqual(updatedAt)
@@ -102,7 +104,7 @@ describe('[features] income reactor', () => {
           id: incomeId.value,
           amount: 100,
           date: date,
-          categoryId: '1',
+          categoryId: categoryId1,
           memo: 'memo',
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -120,7 +122,7 @@ describe('[features] income reactor', () => {
         .when({
           type: 'incomeDeleted',
           id: incomeId,
-          payload: { date: date, categoryId: '1', amount: 100 },
+          payload: { date: date, categoryId: categoryId1, amount: 100 },
           version: 2,
           timestamp: deletedAt
         })
@@ -134,7 +136,7 @@ describe('[features] income reactor', () => {
               expect(income).toBeDefined()
               expect(income.amount).toBe(100)
               expect(income.date).toEqual(date)
-              expect(income.categoryId).toBe('1')
+              expect(income.categoryId).toEqual(categoryId1)
               expect(income.memo).toBe('memo')
               expect(income.updatedAt).toEqual(deletedAt)
               expect(income.deletedAt).toEqual(deletedAt)

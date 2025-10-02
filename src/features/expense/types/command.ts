@@ -44,7 +44,7 @@ export type ExpenseEvent =
   | {
       type: 'expenseEdited'
       id: ExpenseId
-      payload: { categoryId?: string; memo?: string }
+      payload: { categoryId?: CategoryId; memo?: string }
     }
   | {
       type: 'expenseDeleted'
