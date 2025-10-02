@@ -1,0 +1,122 @@
+### health check
+GET http://localhost:3000/health
+
+### add category
+POST http://localhost:3000/command
+Content-Type: application/json
+
+{
+  "type": "addCategory",
+  "id": {
+    "type": "category",
+    "value": "00000000-0000-0000-0000-000000000000"
+  },
+  "payload": {
+    "name": "category"
+  }
+}
+
+### add income
+POST http://localhost:3000/command
+Content-Type: application/json
+
+{
+  "type": "addIncome",
+  "id": {
+    "type": "income",
+    "value": "00000000-0000-0000-0000-000000000000"
+  },
+  "payload": {
+    "amount": 10000,
+    "date": "2025-10-01T00:00:00.000Z",
+    "categoryId": {
+      "type": "category",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "memo": "memo"
+  }
+}
+
+### add income
+POST http://localhost:3000/command
+Content-Type: application/json
+
+{
+  "type": "addIncome",
+  "id": {
+    "type": "income",
+    "value": "00000000-0000-0000-0000-000000000001"
+  },
+  "payload": {
+    "amount": 2000,
+    "date": "2025-10-01T00:00:00.000Z",
+    "categoryId": {
+      "type": "category",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "memo": "memo"
+  }
+}
+
+### add expense
+POST http://localhost:3000/command
+Content-Type: application/json
+
+{
+  "type": "addExpense",
+  "id": {
+    "type": "expense",
+    "value": "00000000-0000-0000-0000-000000000001"
+  },
+  "payload": {
+    "amount": 2000,
+    "date": "2025-10-01T00:00:00.000Z",
+    "categoryId": {
+      "type": "category",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "memo": "memo"
+  }
+}
+
+### get monthly-report
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "type": "monthlyReport",
+  "sourceType": "monthlyReport",
+  "payload": {
+    "month": "2025-10"
+  }
+}
+
+### get category list
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "type": "categories",
+  "sourceType": "category",
+  "payload": {}
+}
+
+### get income list
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "type": "incomes",
+  "sourceType": "income",
+  "payload": {}
+}
+
+### get expense list
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "type": "expenses",
+  "sourceType": "expense",
+  "payload": {}
+}
